@@ -3,18 +3,7 @@ import 'next-auth/jwt';
 
 declare module 'next-auth' {
     interface Session {
-        user: {
-            id: number;
-            firstName: string;
-            lastName: string;
-            email: string;
-            role: {
-                name: string;
-                level: number;
-            };
-            profilePicture: string;
-            password: string;
-        };
+        user: User;
     }
 
     interface User {
@@ -22,11 +11,7 @@ declare module 'next-auth' {
         firstName: string;
         lastName: string;
         email: string;
-        role: {
-            name: string;
-            level: number;
-        };
-        accessToken: string;
+        isAdmin: boolean;
         profilePicture: string;
         password: string;
     }

@@ -7,10 +7,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Provider from './provider';
 
-const TITLE = 'TRAIL HORIZON';
-const DESCRIPTION =
-    "TRAIL HORIZON est Le moteur de recherche de vos prochaines courses de trail running. Trouvez votre prochaine course de trail running en quelques clics ! Retrouvez toutes les informations sur les courses de trail running en France et en Europe. TRAIL HORIZON offre une occasion unique de regrouper la communauté du trail running autour des courses en France et en Europe, autour du partage de l'acualité et des conseils sur le trail running.";
-
+const TITLE = 'NEXT.JS FAST CONFIGURATION';
+const DESCRIPTION = 'Next.js fast configuration';
 export const metadata: Metadata = {
     applicationName: TITLE,
     title: {

@@ -101,7 +101,7 @@ const SignupForm = () => {
                 {error && <span className="text-red-500 text-xs">{error}</span>}
             </CardContent>
             <CardFooter className="flex flex-col gap-2 pt-4">
-                <Button className="w-3/4 m-auto" type="submit">
+                <Button className="w-3/4 m-auto" type="submit" variant={'outline'}>
                     Sign Up
                 </Button>
                 <Link href="/auth/login" className="text-sm hover:underline">

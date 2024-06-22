@@ -16,6 +16,7 @@ const LoginForm = () => {
     const { toast } = useToast();
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
+    const [forgotPassword, setForgotPassword] = useState(false);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -55,25 +56,34 @@ const LoginForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <CardHeader className="space-y-1">
-                <CardTitle className="text-2xl text-center uppercase">Log In</CardTitle>
+                <CardTitle className="text-2xl text-center uppercase">{forgotPassword ? 'Forgot Password' : 'Log In'}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
                 <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{forgotPassword ? 'Email used to reset password' : 'Email'}</Label>
                     <Input required id="email" type="email" placeholder="m@example.com" name="email" />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input required id="password" type="password" name="password" />
-                </div>
+                {!forgotPassword && (
+                    <div className="grid gap-2">
+                        <Label htmlFor="password">Password</Label>
+                        <Input required id="password" type="password" name="password" />
+                    </div>
+                )}
             </CardContent>
             <CardFooter className="flex flex-col gap-2 pt-4">
-                <Button className="w-3/4 m-auto" type="submit">
-                    Login
+                <Button className="w-3/4 m-auto" type="submit" variant={'outline'}>
+                    {forgotPassword ? 'Send' : 'Log In'}
                 </Button>
-                <Link href={''} className="text-sm hover:underline">
-                    Forgot your password ?
-                </Link>
+                <Button
+                    className="text-sm text-background font-normal hover:underline"
+                    variant={'link'}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setForgotPassword(!forgotPassword);
+                    }}
+                >
+                    {forgotPassword ? 'Login' : 'Forgot your password ?'}
+                </Button>
                 <Link href={'/auth/signup'} className="text-sm hover:underline">
                     Create an account
                 </Link>

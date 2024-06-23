@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -32,7 +32,7 @@ const UserPannel = ({ user }: UserPannelProps) => {
                             src={user.profilePicture}
                             alt={`${user.firstName} ${user.lastName}`}
                         />
-                        <AvatarFallback className="hover:bg-accent hover:text-accent-foreground transition-colors">
+                        <AvatarFallback className="bg-background text-primary hover:bg-primary hover:text-background transition-colors">
                             <UserIcon />
                         </AvatarFallback>
                     </Avatar>
@@ -41,7 +41,6 @@ const UserPannel = ({ user }: UserPannelProps) => {
                     <DropdownMenuLabel>
                         <div className="flex flex-col gap-2">
                             <p className="text-center">{`${user.firstName} ${user.lastName}`}</p>
-                            <p className="text-center text-xs uppercase">{user.role.name}</p>
                         </div>
                     </DropdownMenuLabel>
                     {/* <DropdownMenuSeparator /> */}
@@ -83,7 +82,6 @@ const UserPannel = ({ user }: UserPannelProps) => {
                         </AvatarFallback>
                     </Avatar>
                     <CardTitle className="text-md font-bold">{`${user.firstName} ${user.lastName}`}</CardTitle>
-                    <CardDescription className="text-sm uppercase text-inherit">{user.role.name}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col justify-around items-center gap-2">
                     <Link

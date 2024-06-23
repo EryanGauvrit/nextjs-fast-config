@@ -7,13 +7,14 @@ declare module 'next-auth' {
     }
 
     interface User {
-        id: number;
+        id: string;
         firstName: string;
         lastName: string;
         email: string;
         isAdmin: boolean;
         profilePicture: string;
         password: string;
+        emailVerified: Date;
     }
 }
 declare module 'next-auth/jwt' {

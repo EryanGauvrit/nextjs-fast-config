@@ -1,11 +1,11 @@
 'use client';
 
 import { User } from 'next-auth';
-import { useSession } from 'next-auth/react';
 import Loader from '../basics/Loader';
 import { LoginButton } from './LoginButton';
 import { SignupButton } from './SignupButton';
 import UserPannel from './UserPannel';
+import { useSession } from 'next-auth/react';
 
 const HeaderAuth = () => {
     const { data: session, status } = useSession();

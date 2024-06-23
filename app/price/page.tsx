@@ -22,10 +22,10 @@ const page = () => {
                         </Button>
                     </CardFooter>
                 </Card>
-                <Card className="w-72 scale-110 text-center bg-foreground text-background">
+                <Card className="w-72 scale-110 text-center bg-primary text-background">
                     <CardHeader>
                         <CardTitle className="font-bold">220 €</CardTitle>
-                        <CardDescription>Price Two</CardDescription>
+                        <CardDescription className="text-accent">Price Two</CardDescription>
                     </CardHeader>
                     <CardContent>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo obcaecati magni perferendis. Libero, accusantium

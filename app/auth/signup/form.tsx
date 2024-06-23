@@ -7,6 +7,7 @@ import { CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
+import { UserService } from '@/services/userService';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -25,8 +26,6 @@ const SignupForm = () => {
         const email = formData.get('email');
         const password = formData.get('password');
         const passwordConfirm = formData.get('passwordConfirm');
-        const firstName = formData.get('firstName');
-        const lastName = formData.get('lastName');
         setLoading(true);
         if (password !== passwordConfirm) {
             setLoading(false);
@@ -34,33 +33,21 @@ const SignupForm = () => {
             setError('Les mots de passe ne correspondent pas');
             return;
         }
-
-        try {
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                body: JSON.stringify({ email, password, firstName, lastName }),
-            });
-            if (response?.ok) {
-                setLoading(false);
-                const resSignin = await signIn('credentials', {
-                    email: email,
-                    password: password,
-                    redirect: false,
-                });
-                if (resSignin?.ok) {
-                    toast({ variant: 'success', title: 'Bravo !', description: "Bienvenue dans l'équipe !" });
-                }
-            } else {
-                setLoading(false);
-                toast({ variant: 'destructive', title: 'Mmmh ...', description: 'Une erreur est survenue' });
-            }
-        } catch (error) {
+        formData.delete('passwordConfirm');
+        const response = await UserService.create(formData);
+        if (response?.ok) {
             setLoading(false);
-            toast({
-                variant: 'destructive',
-                title: 'Mmmh ...',
-                description: 'Une erreur est survenue, veuillez réessayer avec des informations valides',
+            const resSignin = await signIn('credentials', {
+                email: email,
+                password: password,
+                redirect: false,
             });
+            if (resSignin?.ok) {
+                toast({ variant: 'success', title: 'Bravo !', description: "Bienvenue dans l'équipe !" });
+            }
+        } else {
+            setLoading(false);
+            toast({ variant: 'destructive', title: 'Mmmh ...', description: 'Une erreur est survenue' });
         }
     };
 

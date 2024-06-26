@@ -1,32 +1,23 @@
-'use client';
-
+import { auth } from 'auth';
 import { User } from 'next-auth';
-import Loader from '../basics/Loader';
 import { LoginButton } from './LoginButton';
 import { SignupButton } from './SignupButton';
 import UserPannel from './UserPannel';
-import { useSession } from 'next-auth/react';
 
-const HeaderAuth = () => {
-    const { data: session, status } = useSession();
+const HeaderAuth = async () => {
+    const session = await auth();
 
     const user = session?.user as unknown as User;
 
     return (
         <>
-            {status === 'loading' ? (
-                <Loader />
+            {!user ? (
+                <div className="flex justify-center items-center gap-3 p-6 h-full flex-row lg:gap-1">
+                    <LoginButton classNameText="hidden xl:inline" />
+                    <SignupButton classNameText="hidden xl:inline" className="text-foreground" />
+                </div>
             ) : (
-                <>
-                    {!user ? (
-                        <div className="flex justify-center items-center gap-3 p-6 h-full flex-row lg:gap-1">
-                            <LoginButton classNameText="hidden xl:inline" />
-                            <SignupButton classNameText="hidden xl:inline" className="text-foreground" />
-                        </div>
-                    ) : (
-                        <UserPannel user={user} />
-                    )}
-                </>
+                <UserPannel user={user} />
             )}
         </>
     );

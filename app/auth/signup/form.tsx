@@ -65,12 +65,12 @@ const SignupForm = () => {
             <CardContent className="grid gap-4">
                 <div className="grid grid-cols-2 gap-2">
                     <div className="grid gap-2">
-                        <Label htmlFor="firstName">First name</Label>
-                        <Input required id="firstName" type="text" placeholder="Pierre" name="firstName" />
+                        <Label htmlFor="name">First name</Label>
+                        <Input required id="name" type="text" placeholder="Pierre" name="name" />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="lastName">Last name</Label>
-                        <Input required id="lastName" type="text" placeholder="Jean-Alexandre" name="lastName" />
+                        <Label htmlFor="username">Last name</Label>
+                        <Input required id="username" type="text" placeholder="Jean-Alexandre" name="username" />
                     </div>
                 </div>
                 <div className="grid gap-2">

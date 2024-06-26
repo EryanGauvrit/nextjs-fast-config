@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from 'auth';
 import { CalendarCog, PanelTop, TrendingUp, UserCog, Users } from 'lucide-react';
 import { User } from 'next-auth';
 

@@ -1,9 +1,8 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { SHA256 as sha256 } from 'crypto-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../../../prisma/prisma';
 import { createUserSchema } from '@/lib/zod/userShema';
-
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
 export async function POST(req: NextRequest): Promise<NextResponse> {
     if (req.method === 'POST') {
         // create user
@@ -12,8 +11,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         return new NextResponse(JSON.stringify({ message: 'Method Not allowed' }), { status: 405 });
     }
 }
-export const hashPassword = (string: string) => {
-    return sha256(string).toString();
+const hashPassword = async (password: string) => {
+    return await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUND || ''));
 };
 // function to create user in our database
 async function createUserHandler(req: NextRequest): Promise<NextResponse> {
@@ -25,7 +24,7 @@ async function createUserHandler(req: NextRequest): Promise<NextResponse> {
 
     try {
         const user = await prisma.user.create({
-            data: { ...data, password: hashPassword(data.password) },
+            data: { ...data, password: await hashPassword(data.password) },
         });
         return new NextResponse(JSON.stringify({ user }), { status: 201 });
     } catch (e) {

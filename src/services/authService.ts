@@ -1,41 +1,43 @@
-import { User } from 'next-auth';
-import { prisma } from '../../prisma/prisma';
 import { loginUserSchema } from '@/lib/zod/userShema';
-import { hashPassword } from '../../app/api/user/create/route';
+import { User } from 'next-auth';
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
 
 export type LoginCredentials = {
-    email: string | unknown;
-    password: string | unknown;
+    email: string;
+    password: string;
 };
 
 export class AuthService {
     public static async login(credentials: LoginCredentials): Promise<User | null> {
         const { success, data, error } = loginUserSchema.safeParse(credentials);
         if (!success) {
+            console.log(error);
             throw new Error('Invalid data');
         }
 
         // get user from db
         const user = await prisma.user.findUnique({
-            where: { email: data.email },
+            where: { email: credentials.email as string },
             select: {
                 id: true,
-                firstName: true,
-                lastName: true,
+                name: true,
+                username: true,
                 email: true,
                 isAdmin: true,
-                profilePicture: true,
+                image: true,
                 password: true,
                 emailVerified: true,
             },
         });
 
         if (!user) {
-            throw new Error('User not found');
+            return null;
         }
+        const validation = await bcrypt.compare(credentials.password as string, user.password as string);
 
-        if (user.password !== hashPassword(data.password)) {
-            throw new Error('Invalid credentials');
+        if (!validation) {
+            return null;
         }
 
         return user as User;

@@ -27,11 +27,7 @@ const UserPannel = ({ user }: UserPannelProps) => {
             <DropdownMenu>
                 <DropdownMenuTrigger className="hidden lg:flex items-center gap-2">
                     <Avatar>
-                        <AvatarImage
-                            className="object-cover object-center"
-                            src={user.profilePicture}
-                            alt={`${user.firstName} ${user.lastName}`}
-                        />
+                        <AvatarImage className="object-cover object-center" src={user.image || undefined} alt={`${user.name}`} />
                         <AvatarFallback className="bg-background text-primary hover:bg-primary hover:text-background transition-colors">
                             <UserIcon />
                         </AvatarFallback>
@@ -40,7 +36,7 @@ const UserPannel = ({ user }: UserPannelProps) => {
                 <DropdownMenuContent className="rounded flex flex-col gap-2 mr-6 p-4">
                     <DropdownMenuLabel>
                         <div className="flex flex-col gap-2">
-                            <p className="text-center">{`${user.firstName} ${user.lastName}`}</p>
+                            <p className="text-center">{`${user.name}`}</p>
                         </div>
                     </DropdownMenuLabel>
                     {/* <DropdownMenuSeparator /> */}
@@ -72,16 +68,12 @@ const UserPannel = ({ user }: UserPannelProps) => {
             <div className="lg:hidden">
                 <CardHeader className="flex flex-col items-center p-2">
                     <Avatar>
-                        <AvatarImage
-                            className="object-contain object-center"
-                            src={user.profilePicture}
-                            alt={`${user.firstName} ${user.lastName}`}
-                        />
+                        <AvatarImage className="object-contain object-center" src={user.image || undefined} alt={`${user.name}`} />
                         <AvatarFallback>
                             <UserIcon />
                         </AvatarFallback>
                     </Avatar>
-                    <CardTitle className="text-md font-bold">{`${user.firstName} ${user.lastName}`}</CardTitle>
+                    <CardTitle className="text-md font-bold">{`${user.name}`}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col justify-around items-center gap-2">
                     <Link

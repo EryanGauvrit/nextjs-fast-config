@@ -6,6 +6,7 @@ import { displayMenuItem } from './displayMenuItem';
 const page = async () => {
     const allItemsMenu = await displayMenuItem();
     const itemsMenu = allItemsMenu.filter((item) => item.label !== 'Dashboard');
+
     return (
         <>
             <h1 className="text-2xl font-bold uppercase flex items-center gap-2">

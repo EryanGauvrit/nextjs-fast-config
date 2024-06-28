@@ -1,8 +1,10 @@
 'use server';
 
 import { backendClient } from '@/lib/edgestore-server';
-import { Query, QueryResponse, fetchWrapper, wrapResponse } from './queryService';
+import { compressFile } from '@/lib/utils';
+import { Options } from 'browser-image-compression';
 import { isAuthanticated } from './authService';
+import { QueryResponse, wrapResponse } from './queryService';
 
 export enum ActionFile {
     CREATE = 'create',
@@ -43,42 +45,30 @@ const MIME_TYPES: Record<string, string> = {
     'image/png': 'png',
     'image/webp': 'webp',
 };
-const uploadFileHandler = async (file?: File, fileUrl?: string): Promise<string> => {
+const uploadFileHandler = async (file?: File, fileUrl?: string, fileName?: string, option?: Options): Promise<string> => {
     if ((!file || !MIME_TYPES[file.type]) && !fileUrl) {
         throw new Error('Invalid file type');
     }
 
-    const content: any =
-        file && file.name && !fileUrl
-            ? {
-                  blob: new Blob([file], { type: file.type }),
-                  extension: MIME_TYPES[file.type],
-              }
-            : {
-                  url: fileUrl,
-                  extension: MIME_TYPES[fileUrl?.split('.').pop() || ''],
-              };
+    const compressedFile = await compressFile(file, fileUrl, fileName, option);
 
     const blob = await backendClient.publicFiles.upload({
-        content,
+        content: {
+            blob: new Blob([compressedFile], { type: compressedFile.type }),
+            extension: MIME_TYPES[compressedFile.type],
+        },
     });
     return blob.url;
 };
 
-const updateFileHandler = async (oldUrl: string, file?: File, fileUrl?: string): Promise<string> => {
-    const content: any =
-        file && file.name
-            ? {
-                  blob: new Blob([file], { type: file.type }),
-                  extension: MIME_TYPES[file.type],
-              }
-            : {
-                  url: fileUrl,
-                  extension: MIME_TYPES[fileUrl?.split('.').pop() || ''],
-              };
+const updateFileHandler = async (oldUrl: string, file?: File, fileUrl?: string, fileName?: string, option?: Options): Promise<string> => {
+    const compressedFile = await compressFile(file, fileUrl, fileName, option);
 
     const blob = await backendClient.publicFiles.upload({
-        content,
+        content: {
+            blob: new Blob([compressedFile], { type: compressedFile.type }),
+            extension: MIME_TYPES[compressedFile.type],
+        },
         options: {
             replaceTargetUrl: oldUrl,
         },

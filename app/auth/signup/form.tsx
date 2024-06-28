@@ -7,7 +7,7 @@ import { CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
-import { UserService } from '@/services/userService';
+import { createUser } from '@/services/userService';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -34,8 +34,8 @@ const SignupForm = () => {
             return;
         }
         formData.delete('passwordConfirm');
-        const response = await UserService.create(formData);
-        if (response?.ok) {
+        const response = await createUser(formData);
+        if (!response.isErrored) {
             setLoading(false);
             const resSignin = await signIn('credentials', {
                 email: email,
@@ -47,7 +47,7 @@ const SignupForm = () => {
             }
         } else {
             setLoading(false);
-            toast({ variant: 'destructive', title: 'Mmmh ...', description: 'Une erreur est survenue' });
+            toast({ variant: response.variant, title: response.title, description: response.data });
         }
     };
 

@@ -1,2 +1,8 @@
 AUTH_SECRET
-DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
+DATABASE_URL="mysql://root@localhost:3306/db_test"
+
+EDGE_STORE_ACCESS_KEY=your-access-key
+EDGE_STORE_SECRET_KEY=your-secret-key
+
+BCRYPT_SALT_ROUND = 
+NEXT_PUBLIC_APP_URL="http://localhost:3000"

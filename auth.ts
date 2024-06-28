@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { AuthService } from '@/services/authService';
+import { login } from '@/services/authService';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import NextAuth, { CredentialsSignin } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
@@ -16,7 +16,7 @@ const credentialsConfig = Credentials({
         password: { label: 'Password', type: 'password' },
     },
     async authorize(credentials) {
-        const user = await AuthService.login({
+        const user = await login({
             email: credentials.email as string,
             password: credentials.password as string,
         });

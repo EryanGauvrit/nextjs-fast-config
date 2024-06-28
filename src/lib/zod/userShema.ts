@@ -1,10 +1,14 @@
 import { z } from 'zod';
 
 export const createUserSchema = z.object({
-    email: z.string().email(),
+    email: z.string().email({
+        message: 'Email is invalid',
+    }),
     name: z.string(),
     username: z.string(),
-    password: z.string().min(3),
+    password: z.string().min(3, {
+        message: 'Password must be at least 3 characters long',
+    }),
 });
 
 export const loginUserSchema = z.object({
@@ -13,8 +17,12 @@ export const loginUserSchema = z.object({
 });
 
 export const updateUserSchema = z.object({
-    name: z.optional(z.string()),
-    username: z.optional(z.string()),
-    password: z.optional(z.string().min(3)),
-    email: z.optional(z.string().email()),
+    email: z.string().email().optional(),
+    name: z.string().optional(),
+    username: z.string().optional(),
+    password: z.string().min(3).optional(),
+});
+
+export const getUserByEmailSchema = z.object({
+    email: z.string().email(),
 });

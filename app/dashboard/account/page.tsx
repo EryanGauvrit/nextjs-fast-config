@@ -1,24 +1,24 @@
 import { User } from '@prisma/client';
 import { auth } from 'auth';
 import { UserCog } from 'lucide-react';
-import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import PersonnalInformations from './PersonnalInformations';
+import { getUserByEmail } from '@/services/userService';
 
-const URL = process.env.NEXT_PUBLIC_APP_URL;
 const page = async () => {
     const user = (await auth())?.user;
+    if (!user) {
+        return notFound();
+    }
 
-    const response = await fetch(`${URL}/api/user/${user?.email}`, {
-        method: 'GET',
-        headers: headers(),
-    });
+    const response = await getUserByEmail(user.email as string);
 
-    if (!response.ok) {
+    if (response.isErrored) {
         console.error('Failed to fetch user data');
         notFound();
     }
 
-    const userData = (await response.json()).user as User;
+    const userData = (await response.data) as User;
 
     return (
         <>
@@ -27,15 +27,7 @@ const page = async () => {
                 My account
             </h1>
             <p>Manage your account</p>
-            <div>
-                <h2 className="text-xl font-bold">Profile</h2>
-                <div>
-                    <p>
-                        {userData.name} {userData.username}
-                    </p>
-                    <p>{userData.email}</p>
-                </div>
-            </div>
+            <PersonnalInformations user={userData} userSession={user} />
         </>
     );
 };

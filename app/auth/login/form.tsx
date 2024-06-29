@@ -29,8 +29,7 @@ const LoginForm = () => {
             const res = await signIn('credentials', {
                 email: email,
                 password: password,
-                redirect: true,
-                callbackUrl: '/dashboard',
+                redirect: false,
             });
             if (res?.ok) {
                 setLoading(false);

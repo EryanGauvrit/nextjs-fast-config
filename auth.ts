@@ -3,6 +3,7 @@ import { login } from '@/services/authService';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import NextAuth, { CredentialsSignin } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import Resend from 'next-auth/providers/resend';
 
 class InvalidLoginError extends CredentialsSignin {
     code = 'Invalid identifier or password';
@@ -28,6 +29,30 @@ const credentialsConfig = Credentials({
     },
 });
 
+const ResendConfig = Resend({
+    from: process.env.EMAIL_FROM,
+    name: 'Example',
+    async sendVerificationRequest({ identifier: email, url, token, provider }) {
+        const { host } = new URL(url);
+        const res = await fetch(`${process.env.APP_URL}/api/emails/verification`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: provider.name,
+                from: provider.from,
+                host,
+                to: email,
+                url,
+                token,
+            }),
+        });
+
+        if (!res.ok) throw new Error('Resend error: ' + JSON.stringify(await res.json()));
+    },
+});
+
 export const {
     handlers: { GET, POST },
     signIn,
@@ -42,6 +67,7 @@ export const {
     adapter: PrismaAdapter(prisma),
     pages: {
         signIn: '/auth/login',
+        verifyRequest: '/auth/verify',
     },
-    providers: [credentialsConfig],
+    providers: [credentialsConfig, ResendConfig],
 });

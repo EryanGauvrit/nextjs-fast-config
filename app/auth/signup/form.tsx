@@ -37,10 +37,8 @@ const SignupForm = () => {
         const response = await createUser(formData);
         if (!response.isErrored) {
             setLoading(false);
-            const resSignin = await signIn('credentials', {
+            const resSignin = await signIn('resend', {
                 email: email,
-                password: password,
-                redirect: false,
             });
             if (resSignin?.ok) {
                 toast({ variant: 'success', title: 'Bravo !', description: "Bienvenue dans l'équipe !" });

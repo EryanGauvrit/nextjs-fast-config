@@ -6,3 +6,6 @@ EDGE_STORE_SECRET_KEY=your-secret-key
 
 BCRYPT_SALT_ROUND = 
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+AUTH_RESEND_KEY=abc
+EMAIL_FROM=

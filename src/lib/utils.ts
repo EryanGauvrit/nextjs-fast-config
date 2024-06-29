@@ -37,3 +37,12 @@ export const compressFile = async (file?: File, url?: string, fileName?: string,
     }
     throw new Error('No file or url provided');
 };
+
+export const nullToUndefined = (value: any) => {
+    return value === null ? undefined : value;
+};
+
+export const getFileType = (name?: string) => {
+    if (!name) return undefined;
+    return name.split('.').pop();
+};

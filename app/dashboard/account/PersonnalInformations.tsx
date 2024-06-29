@@ -1,19 +1,19 @@
 'use client';
 
+import AlertDialogComp from '@/components/basics/AlertDialog';
+import Loader from '@/components/basics/Loader';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
-import { User } from '@prisma/client';
-import { User as UserSession } from 'next-auth';
-import { User as UserIcon } from 'lucide-react';
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import Loader from '@/components/basics/Loader';
-import AlertDialogComp from '@/components/basics/AlertDialog';
-import { updateUser } from '@/services/userService';
+import { getFileType, nullToUndefined } from '@/lib/utils';
 import { getFileUrl } from '@/services/fileService';
+import { updateUser } from '@/services/userService';
+import { User } from '@prisma/client';
+import { User as UserIcon } from 'lucide-react';
+import { User as UserSession } from 'next-auth';
+import { useState } from 'react';
 
 type PersonnalInformationsProps = {
     user: User;
@@ -27,9 +27,11 @@ const PersonnalInformations = ({ user, userSession }: PersonnalInformationsProps
     const [paramsPersonnalInformations, setParamsPersonnalInformations] = useState<FormData | null>(null);
     const { toast } = useToast();
 
-    const getImageUrl = async (file?: File, fileUrl?: string, oldUrl?: string | null) => {
-        setIsLoading(true);
-        const url = await getFileUrl(file, fileUrl, oldUrl);
+    const getImageUrl = async (file?: File, fileUrl?: string, oldUrl?: string) => {
+        if ((!file || (file && !file.name)) && !fileUrl) return null;
+        const formData = new FormData();
+        file && formData.append('file', new Blob([file], { type: file.type }));
+        const url = await getFileUrl(formData, fileUrl, oldUrl);
         if (url.isErrored) {
             setIsLoading(false);
             toast({ variant: url.variant, title: url.title, description: url.description });
@@ -47,7 +49,7 @@ const PersonnalInformations = ({ user, userSession }: PersonnalInformationsProps
     const handleUpdateUser = async () => {
         if (!paramsPersonnalInformations) return;
         setIsLoading(true);
-        const pictureUrl = newProfilePicture && (await getImageUrl(newProfilePicture, undefined, userSession?.image));
+        const pictureUrl = newProfilePicture && (await getImageUrl(newProfilePicture, undefined, nullToUndefined(userSession?.image)));
         if (pictureUrl) {
             paramsPersonnalInformations.set('image', pictureUrl);
         }
@@ -120,7 +122,7 @@ const PersonnalInformations = ({ user, userSession }: PersonnalInformationsProps
                         confirmLabel="Sauvegarder"
                         openLabel="Sauvegarder"
                         isSubmit
-                        confirmAction={async () => await handleUpdateUser()}
+                        confirmAction={handleUpdateUser}
                         className="place-self-end"
                     />
                 </Card>

@@ -1,14 +1,11 @@
 'use server';
 
-import { headers } from 'next/headers';
-import { fetchWrapper, wrapResponse } from './queryService';
-import { createUserSchema, getUserByEmailSchema, updateUserSchema } from '@/lib/zod/userShema';
 import { prisma } from '@/lib/prisma';
+import { createUserSchema, getUserByEmailSchema, updateUserSchema } from '@/lib/zod/userShema';
 import bcrypt from 'bcryptjs';
-import { isAuthanticated } from './authService';
 import { AuthError } from 'next-auth';
-
-const URL = process.env.NEXT_PUBLIC_APP_URL;
+import { isAuthanticated } from './authService';
+import { wrapResponse } from './queryService';
 
 const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUND || ''));
